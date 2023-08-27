@@ -40,10 +40,14 @@ export const getUser = (email) => {
   return axios.get(`${BASE_URL}/api/users/${email}`);
 };
 
-export const getEmployeeFileList = () => {
-  return axios.get(`${BASE_URL}/api/download-employee-list`, {
-    responseType: "blob",
-  });
+export const getEmployeeFileList = (userIdData) => {
+
+  const config = {
+    params: { userId: userIdData }, 
+    responseType: 'blob',
+  };
+
+  return axios.get(`${BASE_URL}/api/download-employee-list`, config);
 };
 
 export const deleteUser = (email, idUser) => {

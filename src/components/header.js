@@ -10,7 +10,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InfoIcon from "@mui/icons-material/Info";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
-import {Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Modal, Paper } from "@mui/material";
 import Login from "./login";
 import CreateUsers from "./create-user";
@@ -30,13 +30,14 @@ import DownloadTwoToneIcon from "@mui/icons-material/DownloadTwoTone";
 import AccountMenu from "./profile-menu";
 import { getEmployeeFileList, getAllEmployees } from "../axios/axios";
 import { saveAs } from "file-saver";
-
+import { useUserId } from "./user-provider-id";
 
 export const Avatars = [img1, img2, img3, img4, img5, img6, img7, img8, img9];
 
 const Header = () => {
+  const { userId } = useUserId();
 
- 
+
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userDataName, setUserDataName] = useState(null);
@@ -85,8 +86,8 @@ const Header = () => {
 
   const handleLoginSuccess = (name, avatar, id) => {
     const avatarUrl = handleAvatar(avatar);
-    getAllEmployees(id)
-    
+    getAllEmployees(id);
+
     setUserDataAvatar(avatarUrl);
 
     setUserDataName(name);
@@ -104,10 +105,10 @@ const Header = () => {
   const handleCreateUsers = (dataUs, dataAv, dataId) => {
     setUserDataName(dataUs);
     setUserDataAvatar(dataAv);
-    handleLoginSuccess(dataUs, dataAv, dataId );
+    handleLoginSuccess(dataUs, dataAv, dataId);
     setLoggedIn(true);
     setOpenCreateModal(false);
-   
+  
   };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -121,8 +122,8 @@ const Header = () => {
 
   const handleDownloadList = async () => {
     try {
-      const response = await getEmployeeFileList();
-
+      const response = await getEmployeeFileList(userId);
+      
       const contentDisposition = response.headers["content-disposition"];
       const fileName = contentDisposition
         ? contentDisposition.split("filename=")[1].trim()
@@ -373,12 +374,10 @@ const Header = () => {
                   aria-labelledby="modal-modal-create-user"
                   aria-describedby="modal-modal-user-data"
                 >
-                 
                   <CreateUsers
                     onClose={handleCloseCreateModal}
                     onSuccess={handleCreateUsers}
                   ></CreateUsers>
-                  
                 </Modal>
 
                 <Button color="inherit" onClick={handleModalOpen}>
